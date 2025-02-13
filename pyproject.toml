@@ -1,0 +1,9 @@
+[project]
+name = "reserve"
+version = "0.1.0"
+description = "Simple Django Project for booking table in resturant"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=5.1.6",
+]
