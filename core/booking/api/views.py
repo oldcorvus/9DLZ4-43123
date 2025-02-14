@@ -38,3 +38,39 @@ class BookingCreateAPIView(CreateAPIView):
         reservation_data = ReservationSerializer(reservation).data
         return Response(reservation_data, status=status.HTTP_201_CREATED)
 
+
+
+class CancelReservationView(DestroyAPIView):
+    """
+    View to cancel a reservation and release its table
+    """
+    lookup_field = 'id'
+
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated:
+            return Reservation.objects.filter(user=user)
+        return Reservation.objects.none()
+
+    def destroy(self, request, *args, **kwargs):
+        reservation = self.get_object()
+
+        if reservation.status == ReservationStatus.CANCELLED:
+            return Response(
+                {'error': 'Reservation already cancelled'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        booking_service = BookingService()
+        result = booking_service.cancel_booking(reservation)
+
+        if result:
+            return Response(
+                {'message': 'Reservation cancelled successfully'},
+                status=status.HTTP_200_OK
+            )
+        return Response(
+                {'message': 'Reservation cancellation FAILED'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
