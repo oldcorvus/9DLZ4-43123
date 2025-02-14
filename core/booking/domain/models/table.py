@@ -20,6 +20,19 @@ class Table(models.Model):
     version = models.IntegerField(default=0) 
     objects = TableManager() 
     
+    def mark_as_booked(self):
+        """To book table"""
+        if self.is_booked:
+            raise ValidationError("Table already booked")
+        self.is_booked = True
+        self.version += 1
+        
+    def release_table(self):
+        """To release table"""
+        if not self.is_booked:
+            raise ValidationError("Table not currently booked")
+        self.is_booked = False
+        self.version += 1
 
     def __str__(self):
         return f"{self.seats}- {self.seat_price} - {self.is_booked}"
