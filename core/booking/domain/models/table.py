@@ -5,6 +5,19 @@ import uuid
 from .seat import SeatCount
 
 
+class TableQuerySet(models.QuerySet):
+    def find_available(self, seats_needed: SeatCount):
+        return self.filter(
+            seats__gte=seats_needed.count,
+            is_booked=False
+        )
+class TableManager(models.Manager):
+    def get_queryset(self):
+        return TableQuerySet(self.model, using=self._db)
+    
+    def find_available(self, seats_needed: SeatCount):
+        return self.get_queryset().find_available(seats_needed)
+    
 class Table(models.Model):
     """Root Entity for Table management"""
     class Meta:
