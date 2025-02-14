@@ -41,9 +41,6 @@ class BookingService:
     def _should_use_redis(self) -> bool:
         return Table.objects.filter(is_booked=False).count() <= self.LAST_TABLES_THRESHOLD
 
-
-
-
     def cancel_booking(self, reservation: Reservation):
         with transaction.atomic():
 
