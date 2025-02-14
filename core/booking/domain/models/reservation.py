@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import localtime
 import uuid
 from django.conf import settings
 
@@ -81,6 +82,13 @@ class Reservation(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return (
+            f"Reservation {self.id} | User: {self.user} | Table: {self.table.id} | "
+            f"Time: {localtime(self.start_time)} - {localtime(self.end_time)} | "
+            f"Status: {self.get_status_display()} | Cost: {self.cost_amount} {self.cost_currency}"
+        )
 
     class Meta:
         constraints = [
