@@ -54,23 +54,26 @@ class CancelReservationView(DestroyAPIView):
         return Reservation.objects.none()
 
     def destroy(self, request, *args, **kwargs):
-        reservation = self.get_object()
+        try:
+            reservation = self.get_object()
 
-        if reservation.status == ReservationStatus.CANCELLED:
+            if reservation.status == ReservationStatus.CANCELLED:
+                return Response(
+                    {'error': 'Reservation already cancelled'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            booking_service = BookingService()
+            result = booking_service.cancel_booking(reservation)
+
+            if result:
+                return Response(
+                    {'message': 'Reservation cancelled successfully'},
+                    status=status.HTTP_200_OK
+                )
+            raise ValueError("Failure in cancelling reservation")
+        except Exception as e:
             return Response(
-                {'error': 'Reservation already cancelled'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        booking_service = BookingService()
-        result = booking_service.cancel_booking(reservation)
-
-        if result:
-            return Response(
-                {'message': 'Reservation cancelled successfully'},
-                status=status.HTTP_200_OK
-            )
-        return Response(
-                {'message': 'Reservation cancellation FAILED'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+                    {'message': 'Reservation cancellation FAILED'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
