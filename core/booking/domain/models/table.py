@@ -47,5 +47,5 @@ class Table(models.Model):
         self.is_booked = False
         self.version += 1
 
-def __str__(self):
-    return f"Table {self.id}: {self.seats} seats at {self.seat_price} ({'Booked' if self.is_booked else 'Available'})"
+    def __str__(self):
+        return f"Table {self.id}: {self.seats} seats at {self.seat_price} ({'Booked' if self.is_booked else 'Available'})"
