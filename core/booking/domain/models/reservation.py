@@ -67,6 +67,20 @@ class Reservation(models.Model):
         self.cost_currency = value.currency
 
 
+    def clean(self):
+        """Business rule validation"""
+        try:
+            price_obj = self.price  
+            
+            if self.status == ReservationStatus.CONFIRMED and not price_obj.amount > 0:
+                raise ValidationError("Confirmed reservations must have positive price")
+                
+        except ValueError as e:
+            raise ValidationError(str(e)) from e
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     class Meta:
         constraints = [
