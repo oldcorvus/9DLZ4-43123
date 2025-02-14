@@ -13,7 +13,7 @@ class NormalConcurrencyStrategy(ConcurrencyStrategy):
                 raise ValueError("No tables available")
 
             table, price = pricing_strategy.calculate(num_individuals, tables)
-            reservation = self.create_reservation(user, table, num_individuals, price)
+            reservation = self._create_reservation(user, table, price)
             table.mark_as_booked()
             table.save()
             return reservation

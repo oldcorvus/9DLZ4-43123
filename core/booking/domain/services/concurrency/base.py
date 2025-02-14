@@ -17,7 +17,7 @@ class ConcurrencyStrategy(ABC):
     ) -> Reservation:
         raise NotImplementedError("subclasses must impliment `create_reservation`")
     
-    def create_reservation(self, user, table: Table, price: Price) -> Reservation:
+    def _create_reservation(self, user, table: Table, price: Price) -> Reservation:
         return Reservation.objects.create(
             user=user,
             table=table,
