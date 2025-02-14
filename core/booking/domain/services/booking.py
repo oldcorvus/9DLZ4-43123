@@ -27,7 +27,6 @@ class BookingService:
         """Selects and executes the appropriate concurrency strategy"""
         strategy = self._select_concurrency_strategy()
         return strategy.create_reservation(
-            self, 
             user,
             num_individuals,
             pricing_strategy
