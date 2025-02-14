@@ -38,6 +38,35 @@ class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def reservation_time(self) -> ReservationTime:
+        """Get as value object"""
+        return ReservationTime(
+            start=self.start_time,
+            end=self.end_time
+        )
+
+    @reservation_time.setter
+    def reservation_time(self, value: ReservationTime):
+        """Set from value object"""
+        self.start_time = value.start
+        self.end_time = value.end
+
+    @property
+    def price(self) -> Price:
+        """Get as value object"""
+        return Price(
+            amount=self.cost_amount,
+            currency=self.cost_currency
+        )
+
+    @price.setter
+    def price(self, value: Price):
+        """Set from value object"""
+        self.cost_amount = value.amount
+        self.cost_currency = value.currency
+
+
 
     class Meta:
         constraints = [
