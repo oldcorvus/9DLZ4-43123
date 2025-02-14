@@ -44,3 +44,18 @@ class BookingService:
 
 
 
+    def cancel_booking(self, reservation: Reservation):
+        with transaction.atomic():
+
+            reservation.status =  ReservationStatus.CANCELLED
+            reservation.save()
+            
+            table = reservation.table
+            try:
+                table.release_table()
+                table.save()
+                return reservation
+            except Exception as e:
+                 raise ValueError("failure in canceling reservation")
+                
+ 
