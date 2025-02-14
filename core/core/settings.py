@@ -26,9 +26,11 @@ SECRET_KEY = "django-insecure-u8b!7@8e+l!$e0*eesx%n%da6p&0*6j1r$q$vn+-!hu$5&0h^3
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+import os
 
 # Application definition
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -37,7 +39,32 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    'rest_framework',
+
+    'booking.apps.BookingConfig'
 ]
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1", 
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'test_db'),
+        'USER': os.getenv('POSTGRES_USER', 'test'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'password'),
+        'HOST': 'postgres', 
+        'PORT': 5432,
+    }
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
