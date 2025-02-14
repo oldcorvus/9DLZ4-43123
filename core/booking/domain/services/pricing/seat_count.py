@@ -35,19 +35,26 @@ class CheapestTableStrategy(BasePricingStrategy):
         return (cheapest_option[0], Price(amount=cheapest_option[1]))
 
     def _adjust_seat_count(self, num_individuals: int, all_tables: List[Table]) -> int:
-
         valid_sizes = sorted({table.seats for table in all_tables})
-
-        if num_individuals % 2 == 0:
-            return num_individuals
 
         if num_individuals in valid_sizes:
             return num_individuals
 
+        # If the number is even find the smallest table >= num_individuals
+        if num_individuals % 2 == 0:
+            next_available_size = next(
+                (size for size in valid_sizes if size >= num_individuals),
+                None
+            )
+            if next_available_size is not None:
+                return next_available_size
+
+        # For odd numbers round up to the next even number
         adjusted = num_individuals + 1
         if adjusted in valid_sizes:
             return adjusted
 
+        # Find the smallest even table size >= adjusted
         next_even_size = next(
             (size for size in valid_sizes if size >= adjusted and size % 2 == 0),
             None
