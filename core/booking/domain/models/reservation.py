@@ -37,3 +37,16 @@ class Reservation(models.Model):
     version = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(end_time__gt=models.F('start_time')),
+                name="end_after_start"
+            ),
+            models.CheckConstraint(
+                check=models.Q(cost_amount__gt=0),
+                name="positive_price"
+            )
+        ]
