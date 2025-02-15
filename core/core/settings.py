@@ -32,6 +32,16 @@ import os
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Resturant Booking API',
+    'DESCRIPTION': 'API documentation for resturant Booking',
+    'VERSION': '1.0.0',
+}
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -41,6 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     'rest_framework',
+    'drf_spectacular',
 
     'booking.apps.BookingConfig'
 ]
@@ -59,8 +70,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB', 'test_db'),
-        'USER': os.getenv('POSTGRES_USER', 'test'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'password'),
+        'USER': os.getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'postgres'),
         'HOST': 'postgres', 
         'PORT': 5432,
     }
@@ -100,12 +111,6 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
 
 
 # Password validation

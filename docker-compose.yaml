@@ -15,11 +15,11 @@ services:
   postgres:
     image: postgres:13-alpine
     environment:
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: test_db
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_datas:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
 
@@ -46,4 +46,4 @@ services:
       - redis
 
 volumes:
-  postgres_data:
+  postgres_datas:
